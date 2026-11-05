@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentación: Pruebas y Firma de Apps en Android con Kotlin</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #131c2e;
+      --accent: #3ddc84; /* Android Green */
+      --accent-purple: #a855f7;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Top Progress Bar */
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: var(--card-bg);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    /* Slide Container */
+    .slides-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 4rem;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: translateY(20px);
+    }
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .content-box {
+      max-width: 1000px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--accent), #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+    h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      color: var(--text-muted);
+    }
+    p, li {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    ul { margin-left: 2rem; margin-top: 1rem; }
+    li { margin-bottom: 0.6rem; }
+    pre {
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 1.2rem;
+      font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+      font-size: 1.05rem;
+      overflow-x: auto;
+      margin-top: 1rem;
+      color: #e2e8f0;
+    }
+    .keyword { color: #f43f5e; }
+    .type { color: #38bdf8; }
+    .string { color: #34d399; }
+    .comment { color: #64748b; font-style: italic; }
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: rgba(61, 220, 132, 0.15);
+      color: var(--accent);
+      margin-bottom: 1rem;
+      border: 1px solid rgba(61, 220, 132, 0.3);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .card-mini {
+      background: #0d1527;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    /* Controls */
+    .controls {
+      position: fixed;
+      bottom: 25px;
+      right: 35px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 100;
+    }
+    .counter {
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    button {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.7rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="slides-container">
+    <!-- Slide 1 -->
+    <div class="slide active">
+      <div class="content-box">
+        <span class="badge">Kotlin 2.0 • Jetpack Compose • Android SDK</span>
+        <h1>Pruebas & Firma de Apps</h1>
+        <h3>De Cero a Producción en Android Moderno</h3>
+        <p style="margin-top: 1.5rem;">Una guía didáctica interactiva para aprender a blindar aplicaciones móviles con pruebas automatizadas y asegurar su distribución con firmas criptográficas.</p>
+        <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">💡 Usa las flechas <strong>&larr; &rarr;</strong> del teclado o los botones inferiores para navegar.</p>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>🏗️ Arquitectura Limpia (Clean Architecture)</h2>
+        <p>Dividir el código en capas desacopladas es el secreto para que las pruebas sean rápidas y no requieran emuladores:</p>
+        <div class="grid-2">
+          <div class="card-mini">
+            <h3 style="color: var(--accent);">1. Dominio (Domain)</h3>
+            <p style="font-size: 1rem;">Casos de Uso y Modelos puros en Kotlin. <strong>Cero dependencias de Android</strong>. Se prueba en la JVM en milisegundos.</p>
+          </div>
+          <div class="card-mini">
+            <h3 style="color: var(--accent-purple);">2. Presentación (UI)</h3>
+            <p style="font-size: 1rem;">Jetpack Compose y ViewModels. Maneja el estado reactivo (<code style="color:var(--accent);">StateFlow</code>) y responde a eventos del usuario.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>📦 Gestión de Dependencias Moderna</h2>
+        <p>En lugar de versiones dispersas en archivos Gradle, usamos <strong>Version Catalog</strong> (<code style="color:var(--accent);">gradle/libs.versions.toml</code>):</p>
+        <pre><code><span class="comment"># 1. Definimos la versión en un solo lugar</span>
+<span class="keyword">[versions]</span>
+junit = <span class="string">"4.13.2"</span>
+turbine = <span class="string">"1.2.0"</span>
+
+<span class="comment"># 2. Registramos el artefacto</span>
+<span class="keyword">[libraries]</span>
+junit = { group = <span class="string">"junit"</span>, name = <span class="string">"junit"</span>, version.ref = <span class="string">"junit"</span> }
+turbine = { group = <span class="string">"app.cash.turbine"</span>, name = <span class="string">"turbine"</span>, version.ref = <span class="string">"turbine"</span> }</code></pre>
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>🧪 Prueba Unitaria: AddTodoUseCaseTest</h2>
+        <p>Valida la regla de negocio: <em>"No se pueden crear tareas con títulos en blanco"</em>.</p>
+        <pre><code><span class="keyword">@Test</span>
+<span class="keyword">fun</span> <span class="type">`invoke with blank title fails with descriptive error`</span>() = <span class="type">runTest</span> {
+    <span class="keyword">val</span> result = useCase(title = <span class="string">"   "</span>)
+
+    <span class="comment">// Assertions</span>
+    assertTrue(result.isFailure)
+    assertEquals(<span class="string">"Task title cannot be empty"</span>, result.exceptionOrNull()?.message)
+    assertTrue(repository.getTodos().first().isEmpty())
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>🤖 Prueba E2E: TodoAppE2ETest</h2>
+        <p>Simula el ciclo de vida completo en la pantalla tal como lo haría un usuario real:</p>
+        <ul>
+          <li><strong>Paso 1:</strong> Pulsa el botón flotante (+) para abrir el diálogo.</li>
+          <li><strong>Paso 2:</strong> Escribe el título de la tarea mediante <code style="color:var(--accent);">performTextInput()</code>.</li>
+          <li><strong>Paso 3:</strong> Presiona <em>"Add"</em> y verifica que el texto aparece visible en la lista.</li>
+          <li><strong>Paso 4:</strong> Marca la tarea como completada y comprueba los filtros <em>"Active"</em> y <em>"Completed"</em>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>🔐 ¿Por qué firmamos las aplicaciones?</h2>
+        <div class="grid-2">
+          <div class="card-mini">
+            <h3 style="color: var(--accent);">Identidad & No Repudio</h3>
+            <p style="font-size: 1rem;">Demuestra criptográficamente que la app fue creada por ti y no por un impostor.</p>
+          </div>
+          <div class="card-mini">
+            <h3 style="color: #38bdf8;">Integridad del Binario</h3>
+            <p style="font-size: 1rem;">Garantiza que el APK no fue alterado o inyectado con código malicioso tras compilar.</p>
+          </div>
+        </div>
+        <p style="margin-top: 1.5rem;">⚠️ <strong>Regla del SO Android:</strong> No se puede actualizar una app instalada a menos que el nuevo APK esté firmado exactamente con la <strong>misma clave</strong>.</p>
+      </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>🔑 El Keystore y las Huellas SHA-256</h2>
+        <p>El almacén de claves (<code style="color:var(--accent);">.keystore</code>) protege el par de claves RSA:</p>
+        <pre><code><span class="comment"># Comando para generar un almacén PKCS12</span>
+keytool -genkeypair -v -keystore release.keystore \
+    -alias todoapp_key -keyalg RSA -keysize 2048 \
+    -validity 10000 -storetype PKCS12</code></pre>
+        <p style="margin-top: 1rem;">La huella <strong>SHA-256</strong> es el identificador público que vinculas en <strong>Firebase Console</strong> y <strong>Google Cloud</strong>.</p>
+      </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide">
+      <div class="content-box">
+        <h2>🚀 Compilación y Verificación de Firma</h2>
+        <p>Comandos listos en este repositorio para los estudiantes:</p>
+        <pre><code><span class="comment"># 1. Ejecutar las pruebas unitarias en segundos</span>
+./gradlew test
+
+<span class="comment"># 2. Generar el APK Release firmado</span>
+./gradlew assembleRelease
+
+<span class="comment"># 3. Verificar que el APK cumple esquemas v2 y v3</span>
+./scripts/verify-signature.sh app/build/outputs/apk/release/app-release.apk</code></pre>
+      </div>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide">
+      <div class="content-box" style="text-align: center;">
+        <span class="badge">¡Todo Listo!</span>
+        <h1>¡Hora de Practicar!</h1>
+        <p style="font-size: 1.3rem; margin-top: 1rem;">Todo el código, pruebas, scripts y certificados ya están disponibles y testeados en el repositorio.</p>
+        <p style="margin-top: 2rem; color: var(--accent); font-weight: 700;">github.com/spuentesp/kotlin-signature-testing</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="counter" id="counter">1 / 9</div>
+    <button onclick="prevSlide()">&larr; Anterior</button>
+    <button onclick="nextSlide()">Siguiente &rarr;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const counter = document.getElementById('counter');
+    let current = 0;
+
+    function update() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === current);
+      });
+      const progress = ((current + 1) / slides.length) * 100;
+      progressBar.style.width = progress + '%';
+      counter.textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (current < slides.length - 1) {
+        current++;
+        update();
+      }
+    }
+
+    function prevSlide() {
+      if (current > 0) {
+        current--;
+        update();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    update();
+  </script>
+</body>
+</html>
