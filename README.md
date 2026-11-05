@@ -103,11 +103,15 @@ Full app signature documentation is available in [docs/03-app-signature-guide.md
 
 ---
 
-## 📚 Educational Documentation
+## 📚 Educational Documentation & Guides
 
+- [Manual del Estudiante: Cómo Agregar Testing a Tu Proyecto (Forma Moderna y Antigua)](docs/como-instalar-testing-en-tu-proyecto.md)
 - [01 - Architecture Overview](docs/01-architecture.md)
 - [02 - Testing Guide](docs/02-testing-guide.md)
 - [03 - App Signature Guide](docs/03-app-signature-guide.md)
+- [Guía Didáctica en Español](docs/guia-didactica-es.md)
+- [Guía Paso a Paso para Estudiantes](docs/guia-estudiantes-paso-a-paso.md)
+- [Diapositivas en PDF](docs/presentacion.pdf) | [Diapositivas PPTX](docs/presentacion.pptx) | [Presentación Web](docs/presentacion.html)
 
 ---
 
